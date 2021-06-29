@@ -1,0 +1,16 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "NODE_ENV=production vite build",
+    "dev": "copy-fission-fonts ./src/fonts --woff2 && vite"
+  },
+  "devDependencies": {
+    "@fission-suite/kit": "^1.0.1",
+    "copyfiles": "^2.4.1",
+    "tailwindcss": "^2.2.4",
+    "vite": "^2.3.8"
+  },
+  "dependencies": {
+    "webnative": "^0.26.0"
+  }
+}
