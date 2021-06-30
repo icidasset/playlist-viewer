@@ -2,6 +2,8 @@ import { lookup } from "webnative/data-root"
 import { getLinks } from "webnative/fs/protocol/basic"
 import { PublicTree } from "webnative/fs/v1/PublicTree"
 import * as path from "webnative/path"
+import * as youtubeSearch from "youtube-search"
+import YoutubePlayer from "yt-player"
 
 
 const node = document.querySelector("#root")
@@ -10,15 +12,52 @@ const node = document.querySelector("#root")
 // 🚀
 
 
-;(async function() {
-  const playlist = await loadPlaylist()
+renderPlaylist()
+  .catch(renderError)
 
-  console.log(playlist)
-})()
+
+async function renderPlaylist() {
+  const playlist = await loadPlaylist()
+  if (!playlist) throw new Error("Couldn't find any playlist")
+
+  const youtubeIds = await Promise.all(playlist.tracks.map(track => {
+    return getYoutubeIdForTrack(track)
+  }))
+
+  node.innerHTML = ""
+
+  youtubeIds.forEach(async youtubeId => {
+    if (!youtubeId) return
+
+    const element = document.createElement("div")
+    node.appendChild(element)
+
+    const player = new YoutubePlayer(element, {
+      modestBranding: true
+    })
+
+    player.load(youtubeId)
+    player.setVolume(100)
+  })
+}
 
 
 
 // 🛠
+
+
+function getYoutubeIdForTrack(track) {
+  return new Promise((resolve, reject) => {
+    youtubeSearch(
+      `${track.artist} ${track.title}`,
+      { maxResults: 1, key: "AIzaSyCUu5-dQwR72inQmEV6JK40qHNQC-G8Vl8" },
+      (err, results) => {
+        if (err) reject(err)
+        if (!results[0]) reject("No videos found")
+        resolve(results[0].id)
+      })
+  })
+}
 
 
 async function loadPlaylist() {
@@ -41,4 +80,20 @@ async function loadPlaylist() {
   const playlist = await publicTree.get(pathToPlaylist)
 
   return playlist ? JSON.parse(new TextDecoder().decode(playlist.content)) : null
+}
+
+
+
+// ⚠️
+
+
+function renderError(error) {
+  console.error(error)
+
+  node.innerHTML = `
+    <div class="inline-flex items-center text-red">
+      <i class="material-icons md-error text-base mr-2"></i>
+      ${error.message || error}
+    </div>
+  `
 }

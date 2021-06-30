@@ -2,15 +2,20 @@
   "private": true,
   "scripts": {
     "build": "NODE_ENV=production vite build",
-    "dev": "copy-fission-fonts ./src/fonts --woff2 && vite"
+    "dev": "copy-fission-fonts ./fonts --woff2 && vite"
   },
   "devDependencies": {
     "@fission-suite/kit": "^1.0.1",
+    "autoprefixer": "^10.2.6",
     "copyfiles": "^2.4.1",
+    "querystring": "^0.2.1",
     "tailwindcss": "^2.2.4",
     "vite": "^2.3.8"
   },
   "dependencies": {
-    "webnative": "^0.26.0"
+    "@tailwindcss/aspect-ratio": "^0.2.1",
+    "webnative": "^0.26.0",
+    "youtube-search": "^1.1.6",
+    "yt-player": "^3.5.0"
   }
 }

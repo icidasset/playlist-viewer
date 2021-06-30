@@ -8,6 +8,7 @@ module.exports = {
 
 
   purge: [
+    "**/*.html",
     "src/**/*.{js,jsx}",
     ...kit.tailwindPurgeList()
   ],
@@ -29,6 +30,8 @@ module.exports = {
 
 
   plugins: [
+
+    require("@tailwindcss/aspect-ratio"),
 
     // Add custom font
     plugin(function({ addBase }) {
